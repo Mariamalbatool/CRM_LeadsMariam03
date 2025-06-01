@@ -54,14 +54,16 @@ import {
   locationTranslations 
 } from '@/data/types';
 import { employees } from '@/data/mockData';
-import { Textarea } from '@/components/ui/textarea';
 
 const ProspectiveCustomers: React.FC = () => {
   const { customers, visibleColumns, toggleColumnVisibility } = useCustomers();
   const [filterValues, setFilterValues] = useState<Partial<Customer>>({});
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
-  const [exportData, setExportData] = useState<Partial<Customer>>({});
+  const [exportData, setExportData] = useState<Record<string, boolean>>({});
   const [fileType, setFileType] = useState<"excel" | "csv">("excel");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isColumnOpen, setIsColumnOpen] = useState(false);
   const navigate = useNavigate();
 
   // Apply filters to customers
@@ -100,24 +102,22 @@ const ProspectiveCustomers: React.FC = () => {
     }
 
     setFilteredCustomers(filtered);
+    setIsFilterOpen(false);
   };
 
   // Reset filters
   const resetFilters = () => {
     setFilterValues({});
     setFilteredCustomers(customers);
+    setIsFilterOpen(false);
   };
 
   // Handle export
   const handleExport = () => {
-    // In a real application, this would generate and download a file
-    console.log("Exporting data:", exportData, "File type:", fileType);
-    
     const exportedData = customers.map(customer => {
       const data: Record<string, any> = {};
       
-      if (!exportData.firstName && !exportData.source && !exportData.stage && 
-          !exportData.date && !exportData.mobilePhone && !exportData.responsible) {
+      if (Object.keys(exportData).length === 0 || !Object.values(exportData).some(v => v)) {
         // Export all data if no specific fields selected
         data.id = customer.id;
         data.name = `${customer.firstName} ${customer.lastName}`;
@@ -157,6 +157,21 @@ const ProspectiveCustomers: React.FC = () => {
     
     alert(`تم تصدير البيانات بنجاح بتنسيق ${fileType === 'excel' ? 'Excel' : 'CSV'}`);
     console.log("Exported data:", exportedData);
+    setIsExportOpen(false);
+  };
+
+  const cancelExport = () => {
+    setExportData({});
+    setFileType("excel");
+    setIsExportOpen(false);
+  };
+
+  const cancelColumns = () => {
+    setIsColumnOpen(false);
+  };
+
+  const applyColumns = () => {
+    setIsColumnOpen(false);
   };
 
   // Get source icon
@@ -206,7 +221,7 @@ const ProspectiveCustomers: React.FC = () => {
         
         <div className="mb-4 flex flex-wrap gap-2">
           {/* Filter Button */}
-          <Popover>
+          <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
             <PopoverTrigger asChild>
               <Button variant="outline" className="flex items-center">
                 <Filter className="ml-2 h-4 w-4" />
@@ -300,7 +315,7 @@ const ProspectiveCustomers: React.FC = () => {
             </PopoverContent>
           </Popover>
 
-          {/* Export Button - Needs to be inside dropdown */}
+          {/* Export Button */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center">
@@ -309,7 +324,7 @@ const ProspectiveCustomers: React.FC = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <Dialog>
+              <Dialog open={isExportOpen} onOpenChange={setIsExportOpen}>
                 <DialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                     تصدير
@@ -336,77 +351,66 @@ const ProspectiveCustomers: React.FC = () => {
                       </Select>
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">اسم الزبون</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.firstName}
-                        onChange={(e) => setExportData({...exportData, firstName: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">اسم الزبون</label>
+                      <Checkbox 
+                        checked={exportData.firstName || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, firstName: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">الهاتف المحمول</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.mobilePhone}
-                        onChange={(e) => setExportData({...exportData, mobilePhone: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">الهاتف المحمول</label>
+                      <Checkbox 
+                        checked={exportData.mobilePhone || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, mobilePhone: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">المصدر</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.source}
-                        onChange={(e) => setExportData({...exportData, source: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">المصدر</label>
+                      <Checkbox 
+                        checked={exportData.source || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, source: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">المرحلة</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.stage}
-                        onChange={(e) => setExportData({...exportData, stage: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">المرحلة</label>
+                      <Checkbox 
+                        checked={exportData.stage || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, stage: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">التاريخ</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.date}
-                        onChange={(e) => setExportData({...exportData, date: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">التاريخ</label>
+                      <Checkbox 
+                        checked={exportData.date || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, date: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">المسؤول</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.responsible}
-                        onChange={(e) => setExportData({...exportData, responsible: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">المسؤول</label>
+                      <Checkbox 
+                        checked={exportData.responsible || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, responsible: !!checked})}
                       />
                     </div>
 
-                    <div className="grid">
-                      <label className="text-sm mb-1">ملاحظات المشرف</label>
-                      <Input 
-                        type="checkbox" 
-                        className="w-6 h-6"
-                        checked={!!exportData.supervisorNote}
-                        onChange={(e) => setExportData({...exportData, supervisorNote: e.target.checked ? true : undefined})}
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm">ملاحظات المشرف</label>
+                      <Checkbox 
+                        checked={exportData.supervisorNote || false}
+                        onCheckedChange={(checked) => setExportData({...exportData, supervisorNote: !!checked})}
                       />
                     </div>
                   </div>
-                  <DialogFooter>
+                  <DialogFooter className="flex justify-between">
+                    <Button variant="outline" onClick={cancelExport}>
+                      إلغاء
+                    </Button>
                     <Button onClick={handleExport} variant="default" className="bg-green-500 hover:bg-green-600">
                       تصدير
                     </Button>
@@ -417,7 +421,7 @@ const ProspectiveCustomers: React.FC = () => {
           </DropdownMenu>
 
           {/* Show/Hide Columns Button */}
-          <Dialog>
+          <Dialog open={isColumnOpen} onOpenChange={setIsColumnOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="flex items-center">
                 <Eye className="ml-2 h-4 w-4" />
@@ -511,8 +515,11 @@ const ProspectiveCustomers: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="default" className="bg-green-500 hover:bg-green-600">
+              <DialogFooter className="flex justify-between">
+                <Button variant="outline" onClick={cancelColumns}>
+                  إلغاء
+                </Button>
+                <Button variant="default" className="bg-green-500 hover:bg-green-600" onClick={applyColumns}>
                   إرسال
                 </Button>
               </DialogFooter>
