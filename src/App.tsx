@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import ProspectiveCustomers from "./pages/ProspectiveCustomers";
 import AddCustomer from "./pages/AddCustomer";
 import EditCustomer from "./pages/EditCustomer";
+import CustomerDetails from "./pages/CustomerDetails";
 import Dashboard from "./pages/Dashboard";
 import { Providers } from "./components/Providers";
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/prospects" element={<ProspectiveCustomers />} />
             <Route path="/prospects/add" element={<AddCustomer />} />
+            <Route path="/prospects/view/:id" element={<CustomerDetails />} />
             <Route path="/prospects/edit/:id" element={<EditCustomer />} />
             <Route path="/prospects/dashboard" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

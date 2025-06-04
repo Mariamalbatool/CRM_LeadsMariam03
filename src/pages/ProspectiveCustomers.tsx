@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -547,7 +546,7 @@ const ProspectiveCustomers: React.FC = () => {
                 <TableRow
                   key={customer.id}
                   className="cursor-pointer hover:bg-gray-50"
-                  onClick={() => navigate(`/prospects/edit/${customer.id}`)}
+                  onClick={() => navigate(`/prospects/view/${customer.id}`)}
                 >
                   {visibleColumns.includes('id') && <TableCell className="text-center">{customer.id}</TableCell>}
                   {visibleColumns.includes('fullName') && (
