@@ -54,13 +54,23 @@ import {
   locationTranslations 
 } from '@/data/types';
 import { employees } from '@/data/mockData';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+// Extend jsPDF type to include autoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 const ProspectiveCustomers: React.FC = () => {
   const { customers, visibleColumns, toggleColumnVisibility } = useCustomers();
   const [filterValues, setFilterValues] = useState<Partial<Customer>>({});
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
   const [exportData, setExportData] = useState<Record<string, boolean>>({});
-  const [fileType, setFileType] = useState<"excel" | "csv">("excel");
+  const [fileType, setFileType] = useState<"excel" | "csv" | "pdf">("excel");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isColumnOpen, setIsColumnOpen] = useState(false);
@@ -112,7 +122,7 @@ const ProspectiveCustomers: React.FC = () => {
     setIsFilterOpen(false);
   };
 
-  // Handle export
+  // Handle export with actual file download
   const handleExport = () => {
     const exportedData = customers.map(customer => {
       const data: Record<string, any> = {};
@@ -154,9 +164,54 @@ const ProspectiveCustomers: React.FC = () => {
       
       return data;
     });
+
+    const fileName = `العملاء_المحتملين_${new Date().toISOString().split('T')[0]}`;
+
+    if (fileType === 'excel') {
+      // Create Excel file
+      const ws = XLSX.utils.json_to_sheet(exportedData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'العملاء المحتملين');
+      XLSX.writeFile(wb, `${fileName}.xlsx`);
+    } else if (fileType === 'csv') {
+      // Create CSV file
+      const ws = XLSX.utils.json_to_sheet(exportedData);
+      const csv = XLSX.utils.sheet_to_csv(ws);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${fileName}.csv`;
+      link.click();
+    } else if (fileType === 'pdf') {
+      // Create PDF file
+      const doc = new jsPDF();
+      
+      // Add title
+      doc.setFontSize(16);
+      doc.text('العملاء المحتملين', 105, 20, { align: 'center' });
+      
+      // Prepare table data
+      const headers = Object.keys(exportedData[0] || {});
+      const rows = exportedData.map(item => Object.values(item));
+      
+      doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 30,
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        headStyles: {
+          fillColor: [66, 139, 202],
+          textColor: 255,
+        },
+      });
+      
+      doc.save(`${fileName}.pdf`);
+    }
     
-    alert(`تم تصدير البيانات بنجاح بتنسيق ${fileType === 'excel' ? 'Excel' : 'CSV'}`);
-    console.log("Exported data:", exportedData);
+    alert(`تم تصدير البيانات بنجاح بتنسيق ${fileType === 'excel' ? 'Excel' : fileType === 'csv' ? 'CSV' : 'PDF'}`);
     setIsExportOpen(false);
   };
 
@@ -342,7 +397,7 @@ const ProspectiveCustomers: React.FC = () => {
                         <label className="text-sm mb-1">نوع الملف</label>
                         <Select 
                           value={fileType} 
-                          onValueChange={(value: "excel" | "csv") => setFileType(value)}
+                          onValueChange={(value: "excel" | "csv" | "pdf") => setFileType(value)}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="اختر نوع الملف" />
@@ -350,6 +405,7 @@ const ProspectiveCustomers: React.FC = () => {
                           <SelectContent>
                             <SelectItem value="excel">Excel</SelectItem>
                             <SelectItem value="csv">CSV</SelectItem>
+                            <SelectItem value="pdf">PDF</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
