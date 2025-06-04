@@ -55,15 +55,8 @@ import {
 } from '@/data/types';
 import { employees } from '@/data/mockData';
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-
-// Extend jsPDF type to include autoTable
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF;
-  }
-}
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const ProspectiveCustomers: React.FC = () => {
   const { customers, visibleColumns, toggleColumnVisibility } = useCustomers();
@@ -194,7 +187,7 @@ const ProspectiveCustomers: React.FC = () => {
       const headers = Object.keys(exportedData[0] || {});
       const rows = exportedData.map(item => Object.values(item));
       
-      doc.autoTable({
+      autoTable(doc, {
         head: [headers],
         body: rows,
         startY: 30,
