@@ -28,6 +28,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -230,86 +231,88 @@ const ProspectiveCustomers: React.FC = () => {
             <PopoverContent className="w-[400px] p-6" align="end">
               <h3 className="text-lg font-bold mb-4 text-center">خيارات التصفية</h3>
               
-              <div className="space-y-4">
-                <div className="grid">
-                  <label className="text-sm mb-1">اسم الزبون</label>
-                  <Input 
-                    value={filterValues.firstName || ''} 
-                    onChange={(e) => setFilterValues({...filterValues, firstName: e.target.value})}
-                    placeholder="ابحث باسم الزبون"
-                  />
-                </div>
+              <ScrollArea className="h-[400px] pr-4">
+                <div className="space-y-4">
+                  <div className="grid">
+                    <label className="text-sm mb-1">اسم الزبون</label>
+                    <Input 
+                      value={filterValues.firstName || ''} 
+                      onChange={(e) => setFilterValues({...filterValues, firstName: e.target.value})}
+                      placeholder="ابحث باسم الزبون"
+                    />
+                  </div>
 
-                <div className="grid">
-                  <label className="text-sm mb-1">الهاتف المحمول</label>
-                  <Input 
-                    value={filterValues.mobilePhone || ''} 
-                    onChange={(e) => setFilterValues({...filterValues, mobilePhone: e.target.value})}
-                    placeholder="أدخل رقم الهاتف"
-                  />
-                </div>
+                  <div className="grid">
+                    <label className="text-sm mb-1">الهاتف المحمول</label>
+                    <Input 
+                      value={filterValues.mobilePhone || ''} 
+                      onChange={(e) => setFilterValues({...filterValues, mobilePhone: e.target.value})}
+                      placeholder="أدخل رقم الهاتف"
+                    />
+                  </div>
 
-                <div className="grid">
-                  <label className="text-sm mb-1">المصدر</label>
-                  <Select 
-                    value={filterValues.source} 
-                    onValueChange={(value) => setFilterValues({...filterValues, source: value as Source})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر المصدر" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="facebook">فيسبوك</SelectItem>
-                      <SelectItem value="instagram">انستجرام</SelectItem>
-                      <SelectItem value="whatsapp">واتساب</SelectItem>
-                      <SelectItem value="other">أخرى</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div className="grid">
+                    <label className="text-sm mb-1">المصدر</label>
+                    <Select 
+                      value={filterValues.source} 
+                      onValueChange={(value) => setFilterValues({...filterValues, source: value as Source})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر المصدر" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="facebook">فيسبوك</SelectItem>
+                        <SelectItem value="instagram">انستجرام</SelectItem>
+                        <SelectItem value="whatsapp">واتساب</SelectItem>
+                        <SelectItem value="other">أخرى</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div className="grid">
-                  <label className="text-sm mb-1">المرحلة</label>
-                  <Select 
-                    value={filterValues.stage} 
-                    onValueChange={(value) => setFilterValues({...filterValues, stage: value as Stage})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="اختر المرحلة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(stagesTranslations).map(([key, value]) => (
-                        <SelectItem key={key} value={key}>{value}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div className="grid">
+                    <label className="text-sm mb-1">المرحلة</label>
+                    <Select 
+                      value={filterValues.stage} 
+                      onValueChange={(value) => setFilterValues({...filterValues, stage: value as Stage})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر المرحلة" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(stagesTranslations).map(([key, value]) => (
+                          <SelectItem key={key} value={key}>{value}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div className="grid">
-                  <label className="text-sm mb-1">التاريخ</label>
-                  <Input 
-                    type="date" 
-                    value={filterValues.date || ''} 
-                    onChange={(e) => setFilterValues({...filterValues, date: e.target.value})}
-                  />
-                </div>
+                  <div className="grid">
+                    <label className="text-sm mb-1">التاريخ</label>
+                    <Input 
+                      type="date" 
+                      value={filterValues.date || ''} 
+                      onChange={(e) => setFilterValues({...filterValues, date: e.target.value})}
+                    />
+                  </div>
 
-                <div className="grid">
-                  <label className="text-sm mb-1">المسؤول</label>
-                  <Input 
-                    value={filterValues.responsible || ''} 
-                    onChange={(e) => setFilterValues({...filterValues, responsible: e.target.value})}
-                    placeholder="أدخل اسم المسؤول"
-                  />
+                  <div className="grid">
+                    <label className="text-sm mb-1">المسؤول</label>
+                    <Input 
+                      value={filterValues.responsible || ''} 
+                      onChange={(e) => setFilterValues({...filterValues, responsible: e.target.value})}
+                      placeholder="أدخل اسم المسؤول"
+                    />
+                  </div>
                 </div>
+              </ScrollArea>
 
-                <div className="mt-6 flex justify-between">
-                  <Button variant="outline" onClick={resetFilters}>
-                    إلغاء
-                  </Button>
-                  <Button onClick={applyFilters}>
-                    إرسال
-                  </Button>
-                </div>
+              <div className="mt-6 flex justify-between">
+                <Button variant="outline" onClick={resetFilters}>
+                  إلغاء
+                </Button>
+                <Button onClick={applyFilters}>
+                  إرسال
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
@@ -333,79 +336,81 @@ const ProspectiveCustomers: React.FC = () => {
                   <DialogHeader>
                     <DialogTitle className="text-center">تصدير البيانات الخاصة بك</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="grid">
-                      <label className="text-sm mb-1">نوع الملف</label>
-                      <Select 
-                        value={fileType} 
-                        onValueChange={(value: "excel" | "csv") => setFileType(value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="اختر نوع الملف" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="excel">Excel</SelectItem>
-                          <SelectItem value="csv">CSV</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <ScrollArea className="h-[300px] pr-4">
+                    <div className="space-y-4 py-4">
+                      <div className="grid">
+                        <label className="text-sm mb-1">نوع الملف</label>
+                        <Select 
+                          value={fileType} 
+                          onValueChange={(value: "excel" | "csv") => setFileType(value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختر نوع الملف" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="excel">Excel</SelectItem>
+                            <SelectItem value="csv">CSV</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">اسم الزبون</label>
-                      <Checkbox 
-                        checked={exportData.firstName || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, firstName: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">اسم الزبون</label>
+                        <Checkbox 
+                          checked={exportData.firstName || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, firstName: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">الهاتف المحمول</label>
-                      <Checkbox 
-                        checked={exportData.mobilePhone || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, mobilePhone: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">الهاتف المحمول</label>
+                        <Checkbox 
+                          checked={exportData.mobilePhone || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, mobilePhone: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">المصدر</label>
-                      <Checkbox 
-                        checked={exportData.source || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, source: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">المصدر</label>
+                        <Checkbox 
+                          checked={exportData.source || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, source: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">المرحلة</label>
-                      <Checkbox 
-                        checked={exportData.stage || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, stage: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">المرحلة</label>
+                        <Checkbox 
+                          checked={exportData.stage || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, stage: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">التاريخ</label>
-                      <Checkbox 
-                        checked={exportData.date || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, date: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">التاريخ</label>
+                        <Checkbox 
+                          checked={exportData.date || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, date: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">المسؤول</label>
-                      <Checkbox 
-                        checked={exportData.responsible || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, responsible: !!checked})}
-                      />
-                    </div>
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">المسؤول</label>
+                        <Checkbox 
+                          checked={exportData.responsible || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, responsible: !!checked})}
+                        />
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm">ملاحظات المشرف</label>
-                      <Checkbox 
-                        checked={exportData.supervisorNote || false}
-                        onCheckedChange={(checked) => setExportData({...exportData, supervisorNote: !!checked})}
-                      />
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm">ملاحظات المشرف</label>
+                        <Checkbox 
+                          checked={exportData.supervisorNote || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, supervisorNote: !!checked})}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </ScrollArea>
                   <DialogFooter className="flex justify-between">
                     <Button variant="outline" onClick={cancelExport}>
                       إلغاء
@@ -431,89 +436,91 @@ const ProspectiveCustomers: React.FC = () => {
               <DialogHeader>
                 <DialogTitle className="text-center">إظهار / إخفاء الأعمدة</DialogTitle>
               </DialogHeader>
-              <div className="py-4">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      #
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('id')}
-                      onCheckedChange={() => toggleColumnVisibility('id')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      اسم الزبون
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('fullName')}
-                      onCheckedChange={() => toggleColumnVisibility('fullName')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      الهاتف المحمول
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('mobilePhone')}
-                      onCheckedChange={() => toggleColumnVisibility('mobilePhone')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      المصدر
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('source')}
-                      onCheckedChange={() => toggleColumnVisibility('source')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      المرحلة
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('stage')}
-                      onCheckedChange={() => toggleColumnVisibility('stage')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      التاريخ
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('date')}
-                      onCheckedChange={() => toggleColumnVisibility('date')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      المسؤول
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('responsible')}
-                      onCheckedChange={() => toggleColumnVisibility('responsible')}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium">
-                      ملاحظة المشرف
-                    </label>
-                    <Checkbox 
-                      checked={visibleColumns.includes('supervisorNote')}
-                      onCheckedChange={() => toggleColumnVisibility('supervisorNote')}
-                    />
+              <ScrollArea className="h-[300px] pr-4">
+                <div className="py-4">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        #
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('id')}
+                        onCheckedChange={() => toggleColumnVisibility('id')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        اسم الزبون
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('fullName')}
+                        onCheckedChange={() => toggleColumnVisibility('fullName')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        الهاتف المحمول
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('mobilePhone')}
+                        onCheckedChange={() => toggleColumnVisibility('mobilePhone')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        المصدر
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('source')}
+                        onCheckedChange={() => toggleColumnVisibility('source')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        المرحلة
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('stage')}
+                        onCheckedChange={() => toggleColumnVisibility('stage')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        التاريخ
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('date')}
+                        onCheckedChange={() => toggleColumnVisibility('date')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        المسؤول
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('responsible')}
+                        onCheckedChange={() => toggleColumnVisibility('responsible')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
+                        ملاحظة المشرف
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('supervisorNote')}
+                        onCheckedChange={() => toggleColumnVisibility('supervisorNote')}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollArea>
               <DialogFooter className="flex justify-between">
                 <Button variant="outline" onClick={cancelColumns}>
                   إلغاء
