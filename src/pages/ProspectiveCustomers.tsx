@@ -127,6 +127,7 @@ const ProspectiveCustomers: React.FC = () => {
         data.mobile = customer.mobilePhone;
         data.source = sourceTranslations[customer.source];
         data.stage = stagesTranslations[customer.stage];
+        data.location = locationTranslations[customer.location];
         data.date = customer.date;
         data.responsible = customer.responsible;
         data.supervisorNote = customer.supervisorNote || '';
@@ -143,6 +144,9 @@ const ProspectiveCustomers: React.FC = () => {
         }
         if (exportData.stage) {
           data.stage = stagesTranslations[customer.stage];
+        }
+        if (exportData.location) {
+          data.location = locationTranslations[customer.location];
         }
         if (exportData.date) {
           data.date = customer.date;
@@ -436,6 +440,14 @@ const ProspectiveCustomers: React.FC = () => {
                       </div>
 
                       <div className="flex items-center justify-between">
+                        <label className="text-sm">العنوان</label>
+                        <Checkbox 
+                          checked={exportData.location || false}
+                          onCheckedChange={(checked) => setExportData({...exportData, location: !!checked})}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
                         <label className="text-sm">التاريخ</label>
                         <Checkbox 
                           checked={exportData.date || false}
@@ -540,6 +552,16 @@ const ProspectiveCustomers: React.FC = () => {
                     
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-medium">
+                        العنوان
+                      </label>
+                      <Checkbox 
+                        checked={visibleColumns.includes('location')}
+                        onCheckedChange={() => toggleColumnVisibility('location')}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">
                         التاريخ
                       </label>
                       <Checkbox 
@@ -592,6 +614,7 @@ const ProspectiveCustomers: React.FC = () => {
                 {visibleColumns.includes('mobilePhone') && <TableHead className="text-right">الهاتف المحمول</TableHead>}
                 {visibleColumns.includes('source') && <TableHead className="text-center">المصدر</TableHead>}
                 {visibleColumns.includes('stage') && <TableHead className="text-right">المرحلة</TableHead>}
+                {visibleColumns.includes('location') && <TableHead className="text-right">العنوان</TableHead>}
                 {visibleColumns.includes('date') && <TableHead className="text-center">التاريخ</TableHead>}
                 {visibleColumns.includes('responsible') && <TableHead className="text-right">المسؤول</TableHead>}
                 {visibleColumns.includes('supervisorNote') && <TableHead className="text-right">ملاحظة المشرف</TableHead>}
@@ -617,6 +640,7 @@ const ProspectiveCustomers: React.FC = () => {
                     </TableCell>
                   )}
                   {visibleColumns.includes('stage') && <TableCell>{stagesTranslations[customer.stage]}</TableCell>}
+                  {visibleColumns.includes('location') && <TableCell>{locationTranslations[customer.location]}</TableCell>}
                   {visibleColumns.includes('date') && <TableCell className="text-center">{customer.date}</TableCell>}
                   {visibleColumns.includes('responsible') && <TableCell>{customer.responsible}</TableCell>}
                   {visibleColumns.includes('supervisorNote') && (
