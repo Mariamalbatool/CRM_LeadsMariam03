@@ -127,7 +127,7 @@ const ProspectiveCustomers: React.FC = () => {
         data.mobile = customer.mobilePhone;
         data.source = sourceTranslations[customer.source];
         data.stage = stagesTranslations[customer.stage];
-        data.location = locationTranslations[customer.location];
+        data.location = `${locationTranslations[customer.location]}${customer.city ? ` - ${customer.city}` : ''}`;
         data.date = customer.date;
         data.responsible = customer.responsible;
         data.supervisorNote = customer.supervisorNote || '';
@@ -146,7 +146,7 @@ const ProspectiveCustomers: React.FC = () => {
           data.stage = stagesTranslations[customer.stage];
         }
         if (exportData.location) {
-          data.location = locationTranslations[customer.location];
+          data.location = `${locationTranslations[customer.location]}${customer.city ? ` - ${customer.city}` : ''}`;
         }
         if (exportData.date) {
           data.date = customer.date;
@@ -640,7 +640,16 @@ const ProspectiveCustomers: React.FC = () => {
                     </TableCell>
                   )}
                   {visibleColumns.includes('stage') && <TableCell>{stagesTranslations[customer.stage]}</TableCell>}
-                  {visibleColumns.includes('location') && <TableCell>{locationTranslations[customer.location]}</TableCell>}
+                  {visibleColumns.includes('location') && (
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span>{locationTranslations[customer.location]}</span>
+                        {customer.city && (
+                          <span className="text-sm text-gray-500">{customer.city}</span>
+                        )}
+                      </div>
+                    </TableCell>
+                  )}
                   {visibleColumns.includes('date') && <TableCell className="text-center">{customer.date}</TableCell>}
                   {visibleColumns.includes('responsible') && <TableCell>{customer.responsible}</TableCell>}
                   {visibleColumns.includes('supervisorNote') && (
