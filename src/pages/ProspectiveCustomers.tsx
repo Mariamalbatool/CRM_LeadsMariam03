@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -607,7 +608,7 @@ const ProspectiveCustomers: React.FC = () => {
             </Dialog>
           </div>
 
-          {/* Add Customer Button - moved back to the right side */}
+          {/* Add Customer Button */}
           <Link 
             to="/prospects/add" 
             className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
@@ -729,3 +730,4 @@ const ProspectiveCustomers: React.FC = () => {
 };
 
 export default ProspectiveCustomers;
+
