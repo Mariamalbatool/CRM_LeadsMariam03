@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -272,29 +273,7 @@ const ProspectiveCustomers: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6">العملاء المحتملين</h2>
         
         <div className="mb-4 flex flex-wrap justify-between gap-2">
-          {/* Add Customer Button - moved to the left side */}
-          <Link 
-            to="/prospects/add" 
-            className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 ml-1" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 4v16m8-8H4" 
-              />
-            </svg>
-            إضافة زبون جديد
-          </Link>
-
-          {/* Action buttons container - moved to the right side */}
+          {/* Action buttons container */}
           <div className="flex flex-wrap gap-2">
             {/* Filter Button */}
             <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
@@ -627,6 +606,28 @@ const ProspectiveCustomers: React.FC = () => {
               </DialogContent>
             </Dialog>
           </div>
+
+          {/* Add Customer Button - moved back to the right side */}
+          <Link 
+            to="/prospects/add" 
+            className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-5 w-5 ml-1" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M12 4v16m8-8H4" 
+              />
+            </svg>
+            إضافة زبون جديد
+          </Link>
         </div>
         
         {/* Customers Table */}
