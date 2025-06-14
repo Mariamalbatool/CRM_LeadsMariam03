@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
@@ -25,6 +24,7 @@ import {
   cityOptions 
 } from '@/data/types';
 import { employees } from '@/data/mockData';
+import { toast } from '@/hooks/use-toast';
 
 const AddCustomer: React.FC = () => {
   const { addCustomer } = useCustomers();
@@ -41,14 +41,79 @@ const AddCustomer: React.FC = () => {
     gender: 'male',
   });
 
+  const validateTextInput = (value: string) => {
+    const textRegex = /^[a-zA-Zأ-ي\s]+$/;
+    return textRegex.test(value);
+  };
+
+  const validatePhoneInput = (value: string) => {
+    const phoneRegex = /^[0-9]+$/;
+    return phoneRegex.test(value);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // التحقق من صحة الاسم الأول
+    if (!validateTextInput(formData.firstName)) {
+      toast({
+        title: "خطأ في المدخلات",
+        description: "الاسم الأول يجب أن يحتوي على أحرف فقط",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // التحقق من صحة الاسم الأخير
+    if (!validateTextInput(formData.lastName)) {
+      toast({
+        title: "خطأ في المدخلات",
+        description: "الاسم الأخير يجب أن يحتوي على أحرف فقط",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // التحقق من صحة رقم الهاتف
+    if (!validatePhoneInput(formData.mobilePhone)) {
+      toast({
+        title: "خطأ في المدخلات",
+        description: "رقم الهاتف يجب أن يحتوي على أرقام فقط",
+        variant: "destructive"
+      });
+      return;
+    }
+
     addCustomer(formData);
     navigate('/prospects');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
+    // التحقق من المدخلات أثناء الكتابة
+    if (name === 'firstName' || name === 'lastName') {
+      if (value && !validateTextInput(value)) {
+        toast({
+          title: "خطأ في المدخلات",
+          description: `${name === 'firstName' ? 'الاسم الأول' : 'الاسم الأخير'} يجب أن يحتوي على أحرف فقط`,
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+    
+    if (name === 'mobilePhone' || name === 'whatsappNumber') {
+      if (value && !validatePhoneInput(value)) {
+        toast({
+          title: "خطأ في المدخلات",
+          description: "رقم الهاتف يجب أن يحتوي على أرقام فقط",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+
     setFormData({
       ...formData,
       [name]: value
@@ -77,6 +142,7 @@ const AddCustomer: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6">إضافة زبون جديد</h2>
         
         <form onSubmit={handleSubmit}>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Basic Information */}
             <div className="space-y-6">
@@ -93,6 +159,7 @@ const AddCustomer: React.FC = () => {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
+                    placeholder="أحرف فقط"
                   />
                 </div>
                 
@@ -106,6 +173,7 @@ const AddCustomer: React.FC = () => {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
+                    placeholder="أحرف فقط"
                   />
                 </div>
               </div>
@@ -120,8 +188,10 @@ const AddCustomer: React.FC = () => {
                   value={formData.mobilePhone}
                   onChange={handleInputChange}
                   required
+                  placeholder="أرقام فقط"
                 />
               </div>
+              
               
               <div className="space-y-4">
                 <h4 className="text-lg font-medium">روابط التواصل الاجتماعي</h4>
@@ -174,9 +244,11 @@ const AddCustomer: React.FC = () => {
                     name="whatsappNumber"
                     value={formData.whatsappNumber || ''}
                     onChange={handleInputChange}
+                    placeholder="أرقام فقط"
                   />
                 </div>
               </div>
+              
               
               <div className="space-y-2">
                 <label htmlFor="source" className="block text-sm font-medium">
@@ -239,7 +311,7 @@ const AddCustomer: React.FC = () => {
               )}
             </div>
             
-            {/* Customer Details */}
+            
             <div className="space-y-6">
               <h3 className="text-xl font-semibold">تفاصيل الزبون</h3>
               
