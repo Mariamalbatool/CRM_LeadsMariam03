@@ -16,16 +16,40 @@ interface CustomerContextType {
 
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'prospective_customers';
+
 export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "id", "fullName", "mobilePhone", "source", "stage", "date", "responsible", "supervisorNote"
+    "id", "fullName", "mobilePhone", "source", "stage", "location", "date", "responsible", "supervisorNote"
   ]);
 
   useEffect(() => {
-    // Initialize with mock data
-    setCustomers(mockCustomers);
+    // Try to load from localStorage first
+    const savedCustomers = localStorage.getItem(STORAGE_KEY);
+    if (savedCustomers) {
+      try {
+        const parsedCustomers = JSON.parse(savedCustomers);
+        setCustomers(parsedCustomers);
+      } catch (error) {
+        console.error('Error parsing saved customers:', error);
+        // If parsing fails, initialize with mock data
+        setCustomers(mockCustomers);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCustomers));
+      }
+    } else {
+      // Initialize with mock data if no saved data
+      setCustomers(mockCustomers);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCustomers));
+    }
   }, []);
+
+  // Save to localStorage whenever customers change
+  useEffect(() => {
+    if (customers.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
+    }
+  }, [customers]);
 
   const addCustomer = (customer: Omit<Customer, "id" | "date">) => {
     const newCustomer: Customer = {
@@ -34,7 +58,9 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       date: new Date().toISOString().split('T')[0]
     };
     
-    setCustomers([...customers, newCustomer]);
+    const updatedCustomers = [...customers, newCustomer];
+    setCustomers(updatedCustomers);
+    
     toast({
       title: "تم إضافة العميل بنجاح",
       description: `تم إضافة ${newCustomer.firstName} ${newCustomer.lastName} إلى قائمة العملاء المحتملين`,
@@ -42,7 +68,9 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const updateCustomer = (customer: Customer) => {
-    setCustomers(customers.map(c => c.id === customer.id ? customer : c));
+    const updatedCustomers = customers.map(c => c.id === customer.id ? customer : c);
+    setCustomers(updatedCustomers);
+    
     toast({
       title: "تم تحديث بيانات العميل",
       description: `تم تحديث بيانات ${customer.firstName} ${customer.lastName} بنجاح`,
@@ -52,7 +80,9 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const deleteCustomer = (id: number) => {
     const customerToDelete = customers.find(c => c.id === id);
     if (customerToDelete) {
-      setCustomers(customers.filter(c => c.id !== id));
+      const updatedCustomers = customers.filter(c => c.id !== id);
+      setCustomers(updatedCustomers);
+      
       toast({
         title: "تم حذف العميل",
         description: `تم حذف ${customerToDelete.firstName} ${customerToDelete.lastName} من قائمة العملاء المحتملين`,
