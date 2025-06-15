@@ -7,11 +7,6 @@ import { ExportDialog } from '@/components/prospects/ExportDialog';
 import { ColumnVisibilityDialog } from '@/components/prospects/ColumnVisibilityDialog';
 import { CustomerTable } from '@/components/prospects/CustomerTable';
 import { Button } from '@/components/ui/button';
-import { 
-  Filter, 
-  Eye, 
-  Download
-} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { 
   Customer, 

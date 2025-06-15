@@ -10,7 +10,7 @@ interface CustomerContextType {
   updateCustomer: (customer: Customer) => void;
   deleteCustomer: (id: number) => void;
   getCustomerById: (id: number) => Customer | undefined;
-  visibleColumns: string[];
+  visibleColumns: Record<string, boolean>;
   toggleColumnVisibility: (column: string) => void;
 }
 
@@ -20,9 +20,15 @@ const STORAGE_KEY = 'prospective_customers';
 
 export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([
-    "id", "fullName", "mobilePhone", "source", "stage", "location", "date", "responsible", "supervisorNote"
-  ]);
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
+    firstName: true,
+    lastName: true,
+    mobilePhone: true,
+    source: true,
+    stage: true,
+    date: true,
+    responsible: true
+  });
 
   useEffect(() => {
     // Try to load from localStorage first
@@ -96,11 +102,10 @@ export const CustomerProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const toggleColumnVisibility = (column: string) => {
-    if (visibleColumns.includes(column)) {
-      setVisibleColumns(visibleColumns.filter(col => col !== column));
-    } else {
-      setVisibleColumns([...visibleColumns, column]);
-    }
+    setVisibleColumns(prev => ({
+      ...prev,
+      [column]: !prev[column]
+    }));
   };
 
   return (
