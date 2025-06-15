@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -7,7 +6,6 @@ import { ExportDialog } from '@/components/prospects/ExportDialog';
 import { ColumnVisibilityDialog } from '@/components/prospects/ColumnVisibilityDialog';
 import { CustomerTable } from '@/components/prospects/CustomerTable';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 import { 
   Customer, 
   Stage, 
@@ -121,28 +119,6 @@ const ProspectiveCustomers: React.FC = () => {
             onCancel={cancelColumns}
             onApply={applyColumns}
           />
-
-          {/* Add Customer Button */}
-          <Link 
-            to="/prospects/add" 
-            className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 ml-1" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 4v16m8-8H4" 
-              />
-            </svg>
-            إضافة زبون جديد
-          </Link>
         </div>
         
         {/* Customers Table */}
