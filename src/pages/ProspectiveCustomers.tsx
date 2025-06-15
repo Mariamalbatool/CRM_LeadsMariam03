@@ -89,43 +89,40 @@ const ProspectiveCustomers: React.FC = () => {
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-6">العملاء المحتملين</h2>
         
-        <div className="mb-4 flex flex-wrap justify-between gap-2">
-          {/* Action buttons container */}
-          <div className="flex flex-wrap gap-2">
-            {/* Filter Button */}
-            <FilterDialog
-              isOpen={isFilterOpen}
-              onOpenChange={setIsFilterOpen}
-              filterValues={filterValues}
-              setFilterValues={setFilterValues}
-              onApplyFilters={applyFilters}
-              onResetFilters={resetFilters}
-            />
+        <div className="mb-4 flex flex-wrap gap-2">
+          {/* Filter Button */}
+          <FilterDialog
+            isOpen={isFilterOpen}
+            onOpenChange={setIsFilterOpen}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
+            onApplyFilters={applyFilters}
+            onResetFilters={resetFilters}
+          />
 
-            {/* Export Button */}
-            <ExportDialog
-              isOpen={isExportOpen}
-              onOpenChange={setIsExportOpen}
-              exportData={exportData}
-              setExportData={setExportData}
-              fileType={fileType}
-              setFileType={setFileType}
-              customers={customers}
-              onCancel={cancelExport}
-            />
+          {/* Export Button */}
+          <ExportDialog
+            isOpen={isExportOpen}
+            onOpenChange={setIsExportOpen}
+            exportData={exportData}
+            setExportData={setExportData}
+            fileType={fileType}
+            setFileType={setFileType}
+            customers={customers}
+            onCancel={cancelExport}
+          />
 
-            {/* Show/Hide Columns Button */}
-            <ColumnVisibilityDialog
-              isOpen={isColumnOpen}
-              onOpenChange={setIsColumnOpen}
-              visibleColumns={visibleColumns}
-              toggleColumnVisibility={toggleColumnVisibility}
-              onCancel={cancelColumns}
-              onApply={applyColumns}
-            />
-          </div>
+          {/* Show/Hide Columns Button */}
+          <ColumnVisibilityDialog
+            isOpen={isColumnOpen}
+            onOpenChange={setIsColumnOpen}
+            visibleColumns={visibleColumns}
+            toggleColumnVisibility={toggleColumnVisibility}
+            onCancel={cancelColumns}
+            onApply={applyColumns}
+          />
 
-          {/* Add Customer Button - Only one button */}
+          {/* Add Customer Button */}
           <Link 
             to="/prospects/add" 
             className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
