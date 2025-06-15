@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -730,4 +728,3 @@ const ProspectiveCustomers: React.FC = () => {
 };
 
 export default ProspectiveCustomers;
-
