@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Eye, Edit, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Customer } from '@/data/types';
+import { useCustomers } from '@/contexts/CustomerContext';
 
 interface CustomerTableProps {
   customers: Customer[];
@@ -16,6 +17,8 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
   customers,
   visibleColumns
 }) => {
+  const { deleteCustomer } = useCustomers();
+
   const getStageVariant = (stage: string) => {
     switch (stage) {
       case 'new': return 'default';
@@ -50,39 +53,30 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
     }
   };
 
+  const handleDelete = (customer: Customer) => {
+    if (window.confirm(`هل أنت متأكد من حذف ${customer.firstName} ${customer.lastName}؟`)) {
+      deleteCustomer(customer.id);
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            {visibleColumns.firstName && <TableHead className="text-right">الاسم الأول</TableHead>}
-            {visibleColumns.lastName && <TableHead className="text-right">اسم العائلة</TableHead>}
-            {visibleColumns.mobilePhone && <TableHead className="text-right">رقم الهاتف</TableHead>}
-            {visibleColumns.source && <TableHead className="text-right">المصدر</TableHead>}
-            {visibleColumns.stage && <TableHead className="text-right">المرحلة</TableHead>}
-            {visibleColumns.date && <TableHead className="text-right">التاريخ</TableHead>}
-            {visibleColumns.responsible && <TableHead className="text-right">المسؤول</TableHead>}
             <TableHead className="text-right">الإجراءات</TableHead>
+            {visibleColumns.responsible && <TableHead className="text-right">المسؤول</TableHead>}
+            {visibleColumns.date && <TableHead className="text-right">التاريخ</TableHead>}
+            {visibleColumns.stage && <TableHead className="text-right">المرحلة</TableHead>}
+            {visibleColumns.source && <TableHead className="text-right">المصدر</TableHead>}
+            {visibleColumns.mobilePhone && <TableHead className="text-right">رقم الهاتف</TableHead>}
+            {visibleColumns.lastName && <TableHead className="text-right">اسم العائلة</TableHead>}
+            {visibleColumns.firstName && <TableHead className="text-right">الاسم الأول</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {customers.map((customer) => (
             <TableRow key={customer.id}>
-              {visibleColumns.firstName && <TableCell className="text-right">{customer.firstName}</TableCell>}
-              {visibleColumns.lastName && <TableCell className="text-right">{customer.lastName}</TableCell>}
-              {visibleColumns.mobilePhone && <TableCell className="text-right">{customer.mobilePhone}</TableCell>}
-              {visibleColumns.source && (
-                <TableCell className="text-right">{getSourceLabel(customer.source)}</TableCell>
-              )}
-              {visibleColumns.stage && (
-                <TableCell className="text-right">
-                  <Badge variant={getStageVariant(customer.stage)}>
-                    {getStageLabel(customer.stage)}
-                  </Badge>
-                </TableCell>
-              )}
-              {visibleColumns.date && <TableCell className="text-right">{customer.date}</TableCell>}
-              {visibleColumns.responsible && <TableCell className="text-right">{customer.responsible}</TableCell>}
               <TableCell className="text-right">
                 <div className="flex gap-2">
                   <Link to={`/prospects/view/${customer.id}`}>
@@ -95,11 +89,26 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
                       <Edit className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => handleDelete(customer)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </TableCell>
+              {visibleColumns.responsible && <TableCell className="text-right">{customer.responsible}</TableCell>}
+              {visibleColumns.date && <TableCell className="text-right">{customer.date}</TableCell>}
+              {visibleColumns.stage && (
+                <TableCell className="text-right">
+                  <Badge variant={getStageVariant(customer.stage)}>
+                    {getStageLabel(customer.stage)}
+                  </Badge>
+                </TableCell>
+              )}
+              {visibleColumns.source && (
+                <TableCell className="text-right">{getSourceLabel(customer.source)}</TableCell>
+              )}
+              {visibleColumns.mobilePhone && <TableCell className="text-right">{customer.mobilePhone}</TableCell>}
+              {visibleColumns.lastName && <TableCell className="text-right">{customer.lastName}</TableCell>}
+              {visibleColumns.firstName && <TableCell className="text-right">{customer.firstName}</TableCell>}
             </TableRow>
           ))}
         </TableBody>
