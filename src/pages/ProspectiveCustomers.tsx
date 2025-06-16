@@ -112,25 +112,24 @@ const ProspectiveCustomers: React.FC = () => {
             onCancel={cancelColumns}
             onApply={applyColumns}
           />
+
+          {/* Export Button */}
+          <ExportDialog
+            isOpen={isExportOpen}
+            onOpenChange={setIsExportOpen}
+            exportData={exportData}
+            setExportData={setExportData}
+            fileType={fileType}
+            setFileType={setFileType}
+            customers={customers}
+            onCancel={cancelExport}
+          />
         </div>
         
         {/* Customers Table */}
         <CustomerTable
           customers={filteredCustomers}
           visibleColumns={visibleColumns}
-          onExportClick={handleExportClick}
-        />
-
-        {/* Export Dialog */}
-        <ExportDialog
-          isOpen={isExportOpen}
-          onOpenChange={setIsExportOpen}
-          exportData={exportData}
-          setExportData={setExportData}
-          fileType={fileType}
-          setFileType={setFileType}
-          customers={customers}
-          onCancel={cancelExport}
         />
 
         {/* Pagination */}

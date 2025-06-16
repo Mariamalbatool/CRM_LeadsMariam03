@@ -34,6 +34,17 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     onCancel();
   };
 
+  const exportFields = [
+    { key: 'firstName', label: 'الاسم الأول' },
+    { key: 'lastName', label: 'اسم العائلة' },
+    { key: 'mobilePhone', label: 'رقم الهاتف' },
+    { key: 'source', label: 'المصدر' },
+    { key: 'stage', label: 'المرحلة' },
+    { key: 'address', label: 'العنوان' },
+    { key: 'date', label: 'التاريخ' },
+    { key: 'responsible', label: 'المسؤول' }
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -62,16 +73,16 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           </div>
           <div className="space-y-2">
             <Label>الأعمدة المراد تصديرها:</Label>
-            {['firstName', 'lastName', 'mobilePhone', 'source', 'stage', 'date', 'responsible'].map((field) => (
-              <div key={field} className="flex items-center space-x-2">
+            {exportFields.map((field) => (
+              <div key={field.key} className="flex items-center space-x-2">
                 <Checkbox
-                  id={field}
-                  checked={exportData[field] || false}
+                  id={field.key}
+                  checked={exportData[field.key] || false}
                   onCheckedChange={(checked) => 
-                    setExportData({ ...exportData, [field]: !!checked })
+                    setExportData({ ...exportData, [field.key]: !!checked })
                   }
                 />
-                <Label htmlFor={field}>{field}</Label>
+                <Label htmlFor={field.key}>{field.label}</Label>
               </div>
             ))}
           </div>

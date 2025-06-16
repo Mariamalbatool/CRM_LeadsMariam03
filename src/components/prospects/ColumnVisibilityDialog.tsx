@@ -29,6 +29,7 @@ export const ColumnVisibilityDialog: React.FC<ColumnVisibilityDialogProps> = ({
     { key: 'mobilePhone', label: 'رقم الهاتف' },
     { key: 'source', label: 'المصدر' },
     { key: 'stage', label: 'المرحلة' },
+    { key: 'address', label: 'العنوان' },
     { key: 'date', label: 'التاريخ' },
     { key: 'responsible', label: 'المسؤول' }
   ];
