@@ -7,6 +7,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Download } from 'lucide-react';
 import { Customer } from '@/data/types';
+import { exportToExcel, exportToCSV, exportToPDF } from '@/utils/exportUtils';
+import { toast } from '@/hooks/use-toast';
 
 interface ExportDialogProps {
   isOpen: boolean;
@@ -30,8 +32,44 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   onCancel
 }) => {
   const handleExport = () => {
-    console.log('Exporting data:', { exportData, fileType });
-    onCancel();
+    // Check if at least one field is selected
+    const hasSelectedFields = Object.values(exportData).some(value => value);
+    
+    if (!hasSelectedFields) {
+      toast({
+        title: "خطأ",
+        description: "يرجى اختيار عمود واحد على الأقل للتصدير",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      switch (fileType) {
+        case 'excel':
+          exportToExcel(customers, exportData);
+          break;
+        case 'csv':
+          exportToCSV(customers, exportData);
+          break;
+        case 'pdf':
+          exportToPDF(customers, exportData);
+          break;
+      }
+      
+      toast({
+        title: "تم التصدير",
+        description: `تم تصدير البيانات بتنسيق ${fileType.toUpperCase()} بنجاح`,
+      });
+      
+      onCancel();
+    } catch (error) {
+      toast({
+        title: "خطأ في التصدير",
+        description: "حدث خطأ أثناء تصدير البيانات",
+        variant: "destructive"
+      });
+    }
   };
 
   const exportFields = [

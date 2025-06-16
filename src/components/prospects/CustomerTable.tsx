@@ -2,8 +2,9 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Customer } from '@/data/types';
-import { useCustomers } from '@/contexts/CustomerContext';
+import { Customer, stagesTranslations } from '@/data/types';
+import { Instagram, Facebook, MessageCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface CustomerTableProps {
   customers: Customer[];
@@ -14,38 +15,36 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
   customers,
   visibleColumns
 }) => {
+  const navigate = useNavigate();
+
   const getStageVariant = (stage: string) => {
     switch (stage) {
       case 'new': return 'default';
-      case 'contacted': return 'secondary';
-      case 'qualified': return 'outline';
-      case 'proposal': return 'default';
-      case 'negotiation': return 'secondary';
-      case 'closed': return 'outline';
+      case 'initial_contact': return 'secondary';
+      case 'interested': return 'outline';
+      case 'follow_up': return 'default';
+      case 'potential_deal': return 'secondary';
+      case 'sold': return 'outline';
+      case 'not_interested': return 'destructive';
       default: return 'default';
     }
   };
 
-  const getStageLabel = (stage: string) => {
-    switch (stage) {
-      case 'new': return 'جديد';
-      case 'contacted': return 'تم التواصل';
-      case 'qualified': return 'مؤهل';
-      case 'proposal': return 'عرض';
-      case 'negotiation': return 'تفاوض';
-      case 'closed': return 'مغلق';
-      default: return stage;
+  const getSourceIcon = (source: string) => {
+    switch (source) {
+      case 'facebook':
+        return <Facebook className="h-5 w-5 text-blue-600" />;
+      case 'instagram':
+        return <Instagram className="h-5 w-5 text-pink-600" />;
+      case 'whatsapp':
+        return <MessageCircle className="h-5 w-5 text-green-600" />;
+      default:
+        return <span className="text-sm text-gray-600">أخرى</span>;
     }
   };
 
-  const getSourceLabel = (source: string) => {
-    switch (source) {
-      case 'website': return 'موقع الويب';
-      case 'social': return 'وسائل التواصل';
-      case 'referral': return 'إحالة';
-      case 'advertising': return 'إعلان';
-      default: return source;
-    }
+  const handleCustomerClick = (customerId: number) => {
+    navigate(`/prospects/view/${customerId}`);
   };
 
   return (
@@ -70,17 +69,24 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
               <TableCell className="text-right">{index + 1}</TableCell>
               {visibleColumns.firstName && (
                 <TableCell className="text-right">
-                  {customer.firstName} {customer.lastName}
+                  <button
+                    onClick={() => handleCustomerClick(customer.id)}
+                    className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                  >
+                    {customer.firstName} {customer.lastName}
+                  </button>
                 </TableCell>
               )}
               {visibleColumns.mobilePhone && <TableCell className="text-right">{customer.mobilePhone}</TableCell>}
               {visibleColumns.source && (
-                <TableCell className="text-right">{getSourceLabel(customer.source)}</TableCell>
+                <TableCell className="text-right flex justify-end">
+                  {getSourceIcon(customer.source)}
+                </TableCell>
               )}
               {visibleColumns.stage && (
                 <TableCell className="text-right">
                   <Badge variant={getStageVariant(customer.stage)}>
-                    {getStageLabel(customer.stage)}
+                    {stagesTranslations[customer.stage]}
                   </Badge>
                 </TableCell>
               )}

@@ -92,6 +92,10 @@ const EditCustomer: React.FC = () => {
       }
 
       updateCustomer(formData);
+      toast({
+        title: "تم التحديث",
+        description: `تم تعديل بيانات الزبون ${formData.firstName} ${formData.lastName} بنجاح`,
+      });
       navigate('/prospects');
     }
   };
@@ -99,6 +103,10 @@ const EditCustomer: React.FC = () => {
   const handleDelete = () => {
     if (formData && window.confirm('هل أنت متأكد من حذف هذا العميل؟')) {
       deleteCustomer(formData.id);
+      toast({
+        title: "تم الحذف",
+        description: "تم حذف العميل بنجاح",
+      });
       navigate('/prospects');
     }
   };

@@ -22,7 +22,7 @@ import {
   sourceTranslations, 
   locationTranslations 
 } from '@/data/types';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 const CustomerDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -54,6 +54,10 @@ const CustomerDetails: React.FC = () => {
   const handleDelete = () => {
     if (window.confirm('هل أنت متأكد من حذف هذا العميل؟')) {
       deleteCustomer(customer.id);
+      toast({
+        title: "تم الحذف",
+        description: "تم حذف العميل بنجاح",
+      });
       navigate('/prospects');
     }
   };

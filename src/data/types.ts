@@ -28,6 +28,7 @@ export interface Customer {
   date: string;
   location: Location;
   city?: string;
+  address?: string;
   responsible: string;
   supervisorNote?: string;
   facebookName?: string;
