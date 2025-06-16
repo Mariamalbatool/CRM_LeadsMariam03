@@ -58,6 +58,12 @@ const ProspectiveCustomers: React.FC = () => {
       );
     }
 
+    if (filterValues.supervisorNote) {
+      filtered = filtered.filter(customer => 
+        (customer.supervisorNote || '').toLowerCase().includes((filterValues.supervisorNote || '').toLowerCase())
+      );
+    }
+
     setFilteredCustomers(filtered);
     setIsFilterOpen(false);
   };
@@ -121,7 +127,7 @@ const ProspectiveCustomers: React.FC = () => {
             setExportData={setExportData}
             fileType={fileType}
             setFileType={setFileType}
-            customers={customers}
+            customers={filteredCustomers}
             onCancel={cancelExport}
           />
         </div>
