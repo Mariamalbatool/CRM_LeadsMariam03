@@ -11,11 +11,13 @@ import { useCustomers } from '@/contexts/CustomerContext';
 interface CustomerTableProps {
   customers: Customer[];
   visibleColumns: Record<string, boolean>;
+  onExportClick?: () => void;
 }
 
 export const CustomerTable: React.FC<CustomerTableProps> = ({
   customers,
-  visibleColumns
+  visibleColumns,
+  onExportClick
 }) => {
   const { deleteCustomer } = useCustomers();
 
@@ -64,38 +66,30 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-right">الإجراءات</TableHead>
-            {visibleColumns.responsible && <TableHead className="text-right">المسؤول</TableHead>}
-            {visibleColumns.date && <TableHead className="text-right">التاريخ</TableHead>}
-            {visibleColumns.stage && <TableHead className="text-right">المرحلة</TableHead>}
+            <TableHead className="text-right">#</TableHead>
+            {visibleColumns.firstName && <TableHead className="text-right">اسم الزبون</TableHead>}
+            {visibleColumns.mobilePhone && <TableHead className="text-right">الهاتف المحمول</TableHead>}
             {visibleColumns.source && <TableHead className="text-right">المصدر</TableHead>}
-            {visibleColumns.mobilePhone && <TableHead className="text-right">رقم الهاتف</TableHead>}
-            {visibleColumns.lastName && <TableHead className="text-right">اسم العائلة</TableHead>}
-            {visibleColumns.firstName && <TableHead className="text-right">الاسم الأول</TableHead>}
+            {visibleColumns.stage && <TableHead className="text-right">المرحلة</TableHead>}
+            {visibleColumns.date && <TableHead className="text-right">التاريخ</TableHead>}
+            {visibleColumns.responsible && <TableHead className="text-right">المسؤول</TableHead>}
+            <TableHead className="text-right">ملاحظة المشرف</TableHead>
+            <TableHead className="text-right">الإجراءات</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {customers.map((customer) => (
+          {customers.map((customer, index) => (
             <TableRow key={customer.id}>
-              <TableCell className="text-right">
-                <div className="flex gap-2">
-                  <Link to={`/prospects/view/${customer.id}`}>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Link to={`/prospects/edit/${customer.id}`}>
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Button variant="outline" size="sm" onClick={() => handleDelete(customer)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-              {visibleColumns.responsible && <TableCell className="text-right">{customer.responsible}</TableCell>}
-              {visibleColumns.date && <TableCell className="text-right">{customer.date}</TableCell>}
+              <TableCell className="text-right">{index + 1}</TableCell>
+              {visibleColumns.firstName && (
+                <TableCell className="text-right">
+                  {customer.firstName} {customer.lastName}
+                </TableCell>
+              )}
+              {visibleColumns.mobilePhone && <TableCell className="text-right">{customer.mobilePhone}</TableCell>}
+              {visibleColumns.source && (
+                <TableCell className="text-right">{getSourceLabel(customer.source)}</TableCell>
+              )}
               {visibleColumns.stage && (
                 <TableCell className="text-right">
                   <Badge variant={getStageVariant(customer.stage)}>
@@ -103,12 +97,19 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
                   </Badge>
                 </TableCell>
               )}
-              {visibleColumns.source && (
-                <TableCell className="text-right">{getSourceLabel(customer.source)}</TableCell>
-              )}
-              {visibleColumns.mobilePhone && <TableCell className="text-right">{customer.mobilePhone}</TableCell>}
-              {visibleColumns.lastName && <TableCell className="text-right">{customer.lastName}</TableCell>}
-              {visibleColumns.firstName && <TableCell className="text-right">{customer.firstName}</TableCell>}
+              {visibleColumns.date && <TableCell className="text-right">{customer.date}</TableCell>}
+              {visibleColumns.responsible && <TableCell className="text-right">{customer.responsible}</TableCell>}
+              <TableCell className="text-right">{customer.supervisorNote || '-'}</TableCell>
+              <TableCell className="text-right">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onExportClick}
+                  className="text-xs"
+                >
+                  تصدير
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
@@ -82,6 +83,10 @@ const ProspectiveCustomers: React.FC = () => {
     setIsColumnOpen(false);
   };
 
+  const handleExportClick = () => {
+    setIsExportOpen(true);
+  };
+
   return (
     <Layout>
       <div className="p-6">
@@ -96,18 +101,6 @@ const ProspectiveCustomers: React.FC = () => {
             setFilterValues={setFilterValues}
             onApplyFilters={applyFilters}
             onResetFilters={resetFilters}
-          />
-
-          {/* Export Button */}
-          <ExportDialog
-            isOpen={isExportOpen}
-            onOpenChange={setIsExportOpen}
-            exportData={exportData}
-            setExportData={setExportData}
-            fileType={fileType}
-            setFileType={setFileType}
-            customers={customers}
-            onCancel={cancelExport}
           />
 
           {/* Show/Hide Columns Button */}
@@ -125,6 +118,19 @@ const ProspectiveCustomers: React.FC = () => {
         <CustomerTable
           customers={filteredCustomers}
           visibleColumns={visibleColumns}
+          onExportClick={handleExportClick}
+        />
+
+        {/* Export Dialog */}
+        <ExportDialog
+          isOpen={isExportOpen}
+          onOpenChange={setIsExportOpen}
+          exportData={exportData}
+          setExportData={setExportData}
+          fileType={fileType}
+          setFileType={setFileType}
+          customers={customers}
+          onCancel={cancelExport}
         />
 
         {/* Pagination */}
