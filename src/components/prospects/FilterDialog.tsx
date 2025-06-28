@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,15 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
   onApplyFilters,
   onResetFilters
 }) => {
+  // Apply filters immediately when filter values change
+  useEffect(() => {
+    onApplyFilters();
+  }, [filterValues]);
+
+  const handleInputChange = (field: keyof Customer, value: string) => {
+    setFilterValues({ ...filterValues, [field]: value });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -40,7 +49,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
           التصفية
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-bold">خيارات التصفية</DialogTitle>
         </DialogHeader>
@@ -52,7 +61,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
             <Input
               id="name"
               value={filterValues.firstName || ''}
-              onChange={(e) => setFilterValues({ ...filterValues, firstName: e.target.value })}
+              onChange={(e) => handleInputChange('firstName', e.target.value)}
               className="w-full"
               placeholder="ادخل اسم الزبون"
             />
@@ -65,7 +74,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
             <Input
               id="phone"
               value={filterValues.mobilePhone || ''}
-              onChange={(e) => setFilterValues({ ...filterValues, mobilePhone: e.target.value })}
+              onChange={(e) => handleInputChange('mobilePhone', e.target.value)}
               className="w-full"
               placeholder="ادخل رقم الهاتف"
             />
@@ -82,7 +91,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="اختر المصدر" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="facebook">{sourceTranslations.facebook}</SelectItem>
                 <SelectItem value="instagram">{sourceTranslations.instagram}</SelectItem>
                 <SelectItem value="whatsapp">{sourceTranslations.whatsapp}</SelectItem>
@@ -102,7 +111,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="اختر المرحلة" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50 max-h-[200px] overflow-y-auto">
                 <SelectItem value="new">{stagesTranslations.new}</SelectItem>
                 <SelectItem value="initial_contact">{stagesTranslations.initial_contact}</SelectItem>
                 <SelectItem value="interested">{stagesTranslations.interested}</SelectItem>
@@ -122,7 +131,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               id="date"
               type="date"
               value={filterValues.date || ''}
-              onChange={(e) => setFilterValues({ ...filterValues, date: e.target.value })}
+              onChange={(e) => handleInputChange('date', e.target.value)}
               className="w-full"
             />
           </div>
@@ -138,7 +147,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="اختر المسؤول" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 {responsibleOptions.map((option) => (
                   <SelectItem key={option} value={option}>{option}</SelectItem>
                 ))}
@@ -153,7 +162,7 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
             <Input
               id="supervisorNote"
               value={filterValues.supervisorNote || ''}
-              onChange={(e) => setFilterValues({ ...filterValues, supervisorNote: e.target.value })}
+              onChange={(e) => handleInputChange('supervisorNote', e.target.value)}
               className="w-full"
               placeholder="ادخل ملاحظات المشرف"
             />
@@ -169,10 +178,10 @@ export const FilterDialog: React.FC<FilterDialogProps> = ({
             إلغاء
           </Button>
           <Button 
-            onClick={onApplyFilters}
+            onClick={() => onOpenChange(false)}
             className="px-8 bg-green-600 hover:bg-green-700"
           >
-            إرسال
+            إغلاق
           </Button>
         </div>
       </DialogContent>

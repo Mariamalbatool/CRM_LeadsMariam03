@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { useCustomers } from '@/contexts/CustomerContext';
 import { FilterDialog } from '@/components/prospects/FilterDialog';
@@ -65,8 +65,12 @@ const ProspectiveCustomers: React.FC = () => {
     }
 
     setFilteredCustomers(filtered);
-    setIsFilterOpen(false);
   };
+
+  // Apply filters whenever customers or filterValues change
+  useEffect(() => {
+    applyFilters();
+  }, [customers, filterValues]);
 
   // Reset filters
   const resetFilters = () => {

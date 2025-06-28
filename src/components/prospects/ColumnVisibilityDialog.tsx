@@ -42,12 +42,12 @@ export const ColumnVisibilityDialog: React.FC<ColumnVisibilityDialogProps> = ({
           إظهار/إخفاء الأعمدة
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>إدارة الأعمدة</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-[300px] overflow-y-auto">
             {columns.map((column) => (
               <div key={column.key} className="flex items-center space-x-2">
                 <Checkbox

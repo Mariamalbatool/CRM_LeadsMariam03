@@ -91,7 +91,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           تصدير
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>تصدير البيانات</DialogTitle>
         </DialogHeader>
@@ -102,14 +102,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <SelectTrigger className="col-span-3">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border shadow-lg z-50">
                 <SelectItem value="excel">Excel</SelectItem>
                 <SelectItem value="csv">CSV</SelectItem>
                 <SelectItem value="pdf">PDF</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-[300px] overflow-y-auto">
             <Label>الأعمدة المراد تصديرها:</Label>
             {exportFields.map((field) => (
               <div key={field.key} className="flex items-center space-x-2">
